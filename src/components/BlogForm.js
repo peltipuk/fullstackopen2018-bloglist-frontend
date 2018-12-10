@@ -1,9 +1,10 @@
 import React from 'react'
 import blogService from '../services/blogs'
+import { NotificationType } from '../utils/constants'
 
 class BlogForm extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       title: '',
       author: '',
@@ -26,6 +27,7 @@ class BlogForm extends React.Component {
     const responseData = blogService.create(newBlog)
     this.setState({ title: '', author: '', url: ''})
     console.log('Response data', responseData)
+    this.props.showNotification(`a new blog '${newBlog.title}' by ${newBlog.author} added`, NotificationType.info)
   }
 
   render() {

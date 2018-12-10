@@ -3,8 +3,19 @@ import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './index.css'
+import { loggedBlogUserKey, NotificationType } from './utils/constants'
 
-const loggedBlogUserKey = 'loggedBlogUser'
+const Notification = ({ message, type }) => {
+  if (message === null) {
+    return null
+  }
+  return (
+    <div className={type}>
+      {message}
+    </div>
+  )
+}
 
 class App extends React.Component {
   constructor(props) {
@@ -14,7 +25,17 @@ class App extends React.Component {
       username: '',
       password: '',
       user: null,
+      notification: '',
+      notificationType: '',
     }
+  }
+
+  showNotification = (message, type) => {
+    console.log(`Showing notification '${message}' (${type})`)
+    this.setState({ notification: message, notificationType: type })
+    setTimeout(() => {
+      this.setState({ notification: '', notificationType: '' })
+    }, 5000);
   }
 
   componentDidMount() {
@@ -45,12 +66,7 @@ class App extends React.Component {
       window.localStorage.setItem(loggedBlogUserKey, JSON.stringify(user))
       blogService.setToken(user.token)
     } catch (exception) {
-      this.setState({
-        error: 'käyttäjätunnus tai salasana virheellinen',
-      })
-      setTimeout(() => {
-        this.setState({ error: null })
-      }, 5000)
+      this.showNotification('wrong username or password', NotificationType.error)
     }
   }
 
@@ -90,11 +106,17 @@ class App extends React.Component {
 
   render() {
     if (this.state.user === null) {
-      return this.loginForm()
+      return (
+        <div>
+          <Notification message={this.state.notification} type={this.state.notificationType} />
+          {this.loginForm()}
+        </div>
+      )
     } else {
       return (
         <div>
           <h2>blogs</h2>
+          <Notification message={this.state.notification} type={this.state.notificationType} />
           <div>
             <p>
               {this.state.user.name} logged in
@@ -105,8 +127,8 @@ class App extends React.Component {
             <Blog key={blog._id} blog={blog} />
           )}
 
-          <h2>create new</h2>
-          <BlogForm/>
+          <h3>create new</h3>
+          <BlogForm showNotification={this.showNotification} />
         </div>
       );
     }
