@@ -1,0 +1,67 @@
+import React from 'react'
+import blogService from '../services/blogs'
+
+class BlogForm extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      title: '',
+      author: '',
+      url: '',
+    }
+  }
+
+  handleFormChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value })
+  }
+
+  newBlog = (event) => {
+    event.preventDefault()
+    const newBlog = {
+      title: this.state.title,
+      author: this.state.author,
+      url: this.state.url,
+    }
+    console.log('Creating new blog entry', newBlog)
+    const responseData = blogService.create(newBlog)
+    this.setState({ title: '', author: '', url: ''})
+    console.log('Response data', responseData)
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.newBlog}>
+        <div>
+          title
+          <input
+            type="text"
+            name="title"
+            value={this.state.title}
+            onChange={this.handleFormChange}
+          />
+        </div>
+        <div>
+          author
+          <input
+            type="text"
+            name="author"
+            value={this.state.author}
+            onChange={this.handleFormChange}
+          />
+        </div>
+        <div>
+          url
+          <input
+            type="text"
+            name="url"
+            value={this.state.url}
+            onChange={this.handleFormChange}
+          />
+        </div>
+        <button type="submit">create</button>
+      </form>
+    )
+  }
+}
+
+export default BlogForm

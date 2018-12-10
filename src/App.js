@@ -1,5 +1,6 @@
 import React from 'react'
 import Blog from './components/Blog'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -21,6 +22,7 @@ class App extends React.Component {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       this.setState({ user })
+      blogService.setToken(user.token)
     }
     blogService.getAll().then(blogs =>
       this.setState({ blogs })
@@ -41,6 +43,7 @@ class App extends React.Component {
 
       this.setState({ username: '', password: '', user })
       window.localStorage.setItem(loggedBlogUserKey, JSON.stringify(user))
+      blogService.setToken(user.token)
     } catch (exception) {
       this.setState({
         error: 'käyttäjätunnus tai salasana virheellinen',
@@ -101,10 +104,13 @@ class App extends React.Component {
           {this.state.blogs.map(blog =>
             <Blog key={blog._id} blog={blog} />
           )}
+
+          <h2>create new</h2>
+          <BlogForm/>
         </div>
       );
     }
   }
 }
 
-export default App;
+export default App
