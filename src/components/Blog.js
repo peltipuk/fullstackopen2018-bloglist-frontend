@@ -35,7 +35,7 @@ class Blog extends React.Component {
     return (
       <div style={wrapperStyle}>
         <div onClick={this.toggleExpanded}>
-          {blog.title} {blog.author}
+          {blog.title} {blog.author} ({blog.likes})
         </div>
         {this.detailsPane()}
       </div>
