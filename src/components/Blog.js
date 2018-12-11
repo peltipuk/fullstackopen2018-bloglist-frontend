@@ -20,7 +20,7 @@ class Blog extends React.Component {
       return (
         <div style={detailsStyle}>
           <a href={blog.url}>{blog.url}</a><br/>
-          {blog.likes} likes <button>like</button><br/>
+          {blog.likes} likes <button onClick={this.props.onAddLike}>like</button><br/>
           added by {blog.author}
         </div>
       )

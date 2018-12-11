@@ -55,6 +55,15 @@ class App extends React.Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
+  addLike = (id) => async () => {
+    const blog = this.state.blogs.find((blog) => blog._id === id)
+    console.log('Adding like to blog', blog)
+    const blogs = this.state.blogs.filter((blog) => blog._id !== id)
+    const updatedBlog = { ...blog, likes: blog.likes + 1 }
+    this.setState({ blogs: blogs.concat(updatedBlog) })
+    await blogService.update(updatedBlog)
+  }
+
   login = async (event) => {
     event.preventDefault()
     try {
@@ -126,7 +135,7 @@ class App extends React.Component {
           </div>
           <div style={{ paddingBottom: 10 }}>
             {this.state.blogs.map(blog =>
-              <Blog key={blog._id} blog={blog} />
+              <Blog key={blog._id} blog={blog} onAddLike={this.addLike(blog._id)} />
             )}
           </div>
 
