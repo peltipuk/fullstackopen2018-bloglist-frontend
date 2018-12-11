@@ -64,6 +64,17 @@ class App extends React.Component {
     await blogService.update(updatedBlog)
   }
 
+  deleteBlog = (id) => async () => {
+    const blog = this.state.blogs.find((blog) => blog._id === id)
+    console.log('Trying to delete', blog.title)
+    if(window.confirm(`delete '${blog.title}' by ${blog.author}?`)) {
+      this.setState( {blogs: this.state.blogs.filter((b) => b._id !== id)})
+      console.log('Deleting blog', blog)
+      await blogService.remove(blog)
+      console.log('Deleted blog')
+    }
+  }
+
   login = async (event) => {
     event.preventDefault()
     try {
@@ -135,7 +146,12 @@ class App extends React.Component {
           </div>
           <div style={{ paddingBottom: 10 }}>
             {this.state.blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-              <Blog key={blog._id} blog={blog} onAddLike={this.addLike(blog._id)} />
+              <Blog
+                key={blog._id}
+                blog={blog}
+                onAddLike={this.addLike(blog._id)}
+                onDelete={this.deleteBlog(blog._id)}
+                currentUser={this.state.user} />
             )}
           </div>
 

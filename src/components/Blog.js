@@ -15,13 +15,20 @@ class Blog extends React.Component {
 
   detailsPane = () => {
     const blog = this.props.blog
+    const addedBy = blog.user ? blog.user.name : 'anonymous'
     const detailsStyle = { paddingLeft: 10 }
+    const showDeleteButton = blog.user ? blog.user.username === this.props.currentUser.username : true
     if (this.state.expanded) {
       return (
         <div style={detailsStyle}>
-          <a href={blog.url}>{blog.url}</a><br/>
-          {blog.likes} likes <button onClick={this.props.onAddLike}>like</button><br/>
-          added by {blog.author}
+          <a href={blog.url}>{blog.url}</a><br />
+          {blog.likes} likes <button onClick={this.props.onAddLike}>like</button><br />
+          added by {addedBy}<br />
+          <button
+            onClick={this.props.onDelete}
+            style={{ display: showDeleteButton ? '' : 'none' }}>
+            delete
+          </button>
         </div>
       )
     } else {
@@ -31,11 +38,11 @@ class Blog extends React.Component {
 
   render() {
     const blog = this.props.blog
-    const wrapperStyle = { borderStyle: 'solid', borderWidth: 1, borderColor: 'black', padding: 2}
+    const wrapperStyle = { borderStyle: 'solid', borderWidth: 1, borderColor: 'black', padding: 2 }
     return (
       <div style={wrapperStyle}>
         <div onClick={this.toggleExpanded}>
-          {blog.title} {blog.author} ({blog.likes})
+          {blog.title} <span style={{ fontStyle: 'italic' }}>{blog.author}</span> ({blog.likes})
         </div>
         {this.detailsPane()}
       </div>
