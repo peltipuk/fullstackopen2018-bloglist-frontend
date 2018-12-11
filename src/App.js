@@ -124,9 +124,11 @@ class App extends React.Component {
               <button onClick={this.logout}>logout</button>
             </p>
           </div>
-          {this.state.blogs.map(blog =>
-            <Blog key={blog._id} blog={blog} />
-          )}
+          <div style={{ paddingBottom: 10 }}>
+            {this.state.blogs.map(blog =>
+              <Blog key={blog._id} blog={blog} />
+            )}
+          </div>
 
           <Togglable buttonLabel='create new'>
             <BlogForm showNotification={this.showNotification} />
