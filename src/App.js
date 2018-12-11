@@ -1,6 +1,7 @@
 import React from 'react'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './index.css'
@@ -127,8 +128,9 @@ class App extends React.Component {
             <Blog key={blog._id} blog={blog} />
           )}
 
-          <h3>create new</h3>
-          <BlogForm showNotification={this.showNotification} />
+          <Togglable buttonLabel='create new'>
+            <BlogForm showNotification={this.showNotification} />
+          </Togglable>
         </div>
       );
     }

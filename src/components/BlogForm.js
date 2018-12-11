@@ -25,43 +25,46 @@ class BlogForm extends React.Component {
     }
     console.log('Creating new blog entry', newBlog)
     const responseData = blogService.create(newBlog)
-    this.setState({ title: '', author: '', url: ''})
+    this.setState({ title: '', author: '', url: '' })
     console.log('Response data', responseData)
     this.props.showNotification(`a new blog '${newBlog.title}' by ${newBlog.author} added`, NotificationType.info)
   }
 
   render() {
     return (
-      <form onSubmit={this.newBlog}>
-        <div>
-          title
+      <div>
+        <h3>create new</h3>
+        <form onSubmit={this.newBlog}>
+          <div>
+            title
           <input
-            type="text"
-            name="title"
-            value={this.state.title}
-            onChange={this.handleFormChange}
-          />
-        </div>
-        <div>
-          author
+              type="text"
+              name="title"
+              value={this.state.title}
+              onChange={this.handleFormChange}
+            />
+          </div>
+          <div>
+            author
           <input
-            type="text"
-            name="author"
-            value={this.state.author}
-            onChange={this.handleFormChange}
-          />
-        </div>
-        <div>
-          url
+              type="text"
+              name="author"
+              value={this.state.author}
+              onChange={this.handleFormChange}
+            />
+          </div>
+          <div>
+            url
           <input
-            type="text"
-            name="url"
-            value={this.state.url}
-            onChange={this.handleFormChange}
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
+              type="text"
+              name="url"
+              value={this.state.url}
+              onChange={this.handleFormChange}
+            />
+          </div>
+          <button type="submit">create</button>
+        </form>
+      </div>
     )
   }
 }
