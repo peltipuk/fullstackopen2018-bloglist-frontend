@@ -21,7 +21,7 @@ class Blog extends React.Component {
     const showDeleteButton = blog.user ? blog.user.username === this.props.currentUser.username : true
     if (this.state.expanded) {
       return (
-        <div style={detailsStyle}>
+        <div className='details' style={detailsStyle}>
           <a href={blog.url}>{blog.url}</a><br />
           {blog.likes} likes <button onClick={this.props.onAddLike}>like</button><br />
           added by {addedBy}<br />
@@ -41,8 +41,8 @@ class Blog extends React.Component {
     const blog = this.props.blog
     const wrapperStyle = { borderStyle: 'solid', borderWidth: 1, borderColor: 'black', padding: 2 }
     return (
-      <div style={wrapperStyle}>
-        <div onClick={this.toggleExpanded}>
+      <div className='wrapper' style={wrapperStyle}>
+        <div className='titleAndAuthor' onClick={this.toggleExpanded}>
           {blog.title} <span style={{ fontStyle: 'italic' }}>{blog.author}</span> ({blog.likes})
         </div>
         {this.detailsPane()}
