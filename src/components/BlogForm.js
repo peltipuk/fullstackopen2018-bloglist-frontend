@@ -1,6 +1,7 @@
 import React from 'react'
 import blogService from '../services/blogs'
 import { NotificationType } from '../utils/constants'
+import PropTypes from 'prop-types'
 
 class BlogForm extends React.Component {
   constructor(props) {
@@ -67,6 +68,10 @@ class BlogForm extends React.Component {
       </div>
     )
   }
+}
+
+BlogForm.propTypes = {
+  showNotification: PropTypes.func.isRequired,
 }
 
 export default BlogForm
