@@ -8,6 +8,7 @@ const setToken = (newToken) => {
 }
 
 const getAll = () => {
+  console.log('Getting all blogs')
   const request = axios.get(baseUrl)
   return request.then(response => response.data)
 }

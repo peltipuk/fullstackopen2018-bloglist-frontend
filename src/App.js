@@ -98,7 +98,7 @@ class App extends React.Component {
   }
 
   loginForm = () => (
-    <div>
+    <div className='loginFormWrapper'>
       <h2>Log in to application</h2>
 
       <form onSubmit={this.login}>
