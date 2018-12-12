@@ -1,3 +1,5 @@
+let token = null
+
 const blogs = [
   {
     _id: '5c0115006ee1dc09004e0ff8',
@@ -42,4 +44,9 @@ const getAll = () => {
   return Promise.resolve(blogs)
 }
 
-export default { getAll, blogs }
+const setToken = (tokenValue) => {
+  token = tokenValue
+
+}
+
+export default { getAll, blogs, setToken }

@@ -42,9 +42,12 @@ class App extends React.Component {
   componentDidMount() {
     const loggedUserJSON = window.localStorage.getItem(loggedBlogUserKey)
     if (loggedUserJSON) {
+      console.log('User already logged in')
       const user = JSON.parse(loggedUserJSON)
       this.setState({ user })
       blogService.setToken(user.token)
+    } else {
+      console.log('No user logged in')
     }
     blogService.getAll().then(blogs =>
       this.setState({ blogs })
