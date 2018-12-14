@@ -1,170 +1,83 @@
 import React from 'react'
-import Blog from './components/Blog'
-import BlogForm from './components/BlogForm'
-import Togglable from './components/Togglable'
-import blogService from './services/blogs'
-import loginService from './services/login'
-import './index.css'
-import { loggedBlogUserKey, NotificationType } from './utils/constants'
+import ReactDOM from 'react-dom'
+import { createStore } from 'redux'
+import counterReducer from './reducer'
 
-const Notification = ({ message, type }) => {
-  if (message === null) {
-    return null
+const store = createStore(counterReducer)
+
+const Statistiikka = (props) => {
+  const state = store.getState()
+  console.log('state', state)
+  const palautteita = state.good + state.ok + state.bad
+
+  if (palautteita === 0) {
+    return (
+      <div>
+        <h2>statistiikka</h2>
+        <div>ei yhtään palautetta annettu</div>
+      </div>
+    )
   }
+
+  const keskiarvo = (state.good - state.bad) / palautteita
+  const hyvia = state.good / palautteita
+
   return (
-    <div className={type}>
-      {message}
-    </div>
+    <div>
+      <h2>statistiikka</h2>
+      <table>
+        <tbody>
+          <tr>
+            <td>hyvä</td>
+            <td>{state.good}</td>
+          </tr>
+          <tr>
+            <td>neutraali</td>
+            <td>{state.ok}</td>
+          </tr>
+          <tr>
+            <td>huono</td>
+            <td>{state.bad}</td>
+          </tr>
+          <tr>
+            <td>keskiarvo</td>
+            <td>{Math.round(keskiarvo*100)/100}</td>
+          </tr>
+          <tr>
+            <td>positiivisia</td>
+            <td>{Math.round(hyvia*100*100)/100} %</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button onClick={props.onZeroClick}>nollaa tilasto</button>
+    </div >
   )
 }
 
 class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      blogs: [],
-      username: '',
-      password: '',
-      user: null,
-      notification: '',
-      notificationType: '',
-    }
+  klik = (nappi) => () => {
+    store.dispatch({ type: nappi})
   }
-
-  showNotification = (message, type) => {
-    console.log(`Showing notification '${message}' (${type})`)
-    this.setState({ notification: message, notificationType: type })
-    setTimeout(() => {
-      this.setState({ notification: '', notificationType: '' })
-    }, 5000)
-  }
-
-  componentDidMount() {
-    const loggedUserJSON = window.localStorage.getItem(loggedBlogUserKey)
-    if (loggedUserJSON) {
-      console.log('User already logged in')
-      const user = JSON.parse(loggedUserJSON)
-      this.setState({ user })
-      blogService.setToken(user.token)
-    } else {
-      console.log('No user logged in')
-    }
-    blogService.getAll().then(blogs =>
-      this.setState({ blogs })
-    )
-  }
-
-  handleLoginFieldChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value })
-  }
-
-  addLike = (id) => async () => {
-    const blog = this.state.blogs.find((blog) => blog._id === id)
-    console.log('Adding like to blog', blog)
-    const blogs = this.state.blogs.filter((blog) => blog._id !== id)
-    const updatedBlog = { ...blog, likes: blog.likes + 1 }
-    this.setState({ blogs: blogs.concat(updatedBlog) })
-    await blogService.update(updatedBlog)
-  }
-
-  deleteBlog = (id) => async () => {
-    const blog = this.state.blogs.find((blog) => blog._id === id)
-    console.log('Trying to delete', blog.title)
-    if(window.confirm(`delete '${blog.title}' by ${blog.author}?`)) {
-      this.setState( {blogs: this.state.blogs.filter((b) => b._id !== id)})
-      console.log('Deleting blog', blog)
-      await blogService.remove(blog)
-      console.log('Deleted blog')
-    }
-  }
-
-  login = async (event) => {
-    event.preventDefault()
-    try {
-      const user = await loginService.login({
-        username: this.state.username,
-        password: this.state.password
-      })
-
-      this.setState({ username: '', password: '', user })
-      window.localStorage.setItem(loggedBlogUserKey, JSON.stringify(user))
-      blogService.setToken(user.token)
-    } catch (exception) {
-      this.showNotification('wrong username or password', NotificationType.error)
-    }
-  }
-
-  logout = () => {
-    console.log(`Logging out user '${this.user}'`)
-    window.localStorage.removeItem(loggedBlogUserKey)
-    window.location.reload()
-  }
-
-  loginForm = () => (
-    <div className='loginFormWrapper'>
-      <h2>Log in to application</h2>
-
-      <form onSubmit={this.login}>
-        <div>
-          username
-          <input
-            type="text"
-            name="username"
-            value={this.state.username}
-            onChange={this.handleLoginFieldChange}
-          />
-        </div>
-        <div>
-          password
-          <input
-            type="password"
-            name="password"
-            value={this.state.password}
-            onChange={this.handleLoginFieldChange}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
-    </div>
-  )
 
   render() {
-    if (this.state.user === null) {
-      return (
-        <div>
-          <Notification message={this.state.notification} type={this.state.notificationType} />
-          {this.loginForm()}
-        </div>
-      )
-    } else {
-      return (
-        <div>
-          <h2>blogs</h2>
-          <Notification message={this.state.notification} type={this.state.notificationType} />
-          <div>
-            <p>
-              {this.state.user.name} logged in
-              <button onClick={this.logout}>logout</button>
-            </p>
-          </div>
-          <div style={{ paddingBottom: 10 }}>
-            {this.state.blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-              <Blog
-                key={blog._id}
-                blog={blog}
-                onAddLike={this.addLike(blog._id)}
-                onDelete={this.deleteBlog(blog._id)}
-                currentUser={this.state.user} />
-            )}
-          </div>
-
-          <Togglable buttonLabel='create new'>
-            <BlogForm showNotification={this.showNotification} />
-          </Togglable>
-        </div>
-      )
-    }
+    return (
+      <div>
+        <h2>anna palautetta</h2>
+        <button onClick={this.klik('GOOD')}>hyvä</button>
+        <button onClick={this.klik('OK')}>neutraali</button>
+        <button onClick={this.klik('BAD')}>huono</button>
+        <Statistiikka onZeroClick={this.klik('ZERO')} />
+      </div>
+    )
   }
 }
+
+const renderApp = () => {
+  ReactDOM.render(<App />, document.getElementById('root'))
+}
+
+renderApp()
+store.subscribe(renderApp)
 
 export default App
