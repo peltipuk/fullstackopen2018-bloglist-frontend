@@ -1,28 +1,31 @@
-const initialState = {
-  good: 0,
-  ok: 0,
-  bad: 0,
-}
+const anecdotesAtStart = [
+  'If it hurts, do it more often',
+  'Adding manpower to a late software project makes it later!',
+  'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+  'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+  'Premature optimization is the root of all evil.',
+  'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
+]
 
-const counterReducer = (state = initialState, action) => {
-  const newState = { ...state }
-  console.log(action)
-  switch (action.type) {
-  case 'GOOD':
-    newState.good++
-    break
-  case 'OK':
-    newState.ok++
-    break
-  case 'BAD':
-    newState.bad++
-    break
-  case 'ZERO':
-    return { good: 0, ok: 0, bad: 0 }
-  default:
-    return newState
+const getId = () => (100000 * Math.random()).toFixed(0)
+
+const asObject = (anecdote) => {
+  return {
+    content: anecdote,
+    id: getId(),
+    votes: 0
   }
-  return newState
 }
 
-export default counterReducer
+const initialState = anecdotesAtStart.map(asObject)
+
+const reducer = (state = initialState, action) => {
+  console.log('state now: ', state)
+  console.log('action', action)
+  const votedAnecdote = state.find(anecdote => anecdote.id === action.id)
+  const newAnecdote = { ...votedAnecdote }
+  newAnecdote.votes++
+  return state.map(anecdote => anecdote.id === action.id ? newAnecdote : anecdote)
+}
+
+export default reducer
