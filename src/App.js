@@ -36,7 +36,7 @@ class App extends React.Component {
     this.setState({ notification: message, notificationType: type })
     setTimeout(() => {
       this.setState({ notification: '', notificationType: '' })
-    }, 5000);
+    }, 5000)
   }
 
   componentDidMount() {
@@ -94,7 +94,7 @@ class App extends React.Component {
     }
   }
 
-  logout = (event) => {
+  logout = () => {
     console.log(`Logging out user '${this.user}'`)
     window.localStorage.removeItem(loggedBlogUserKey)
     window.location.reload()
@@ -162,7 +162,7 @@ class App extends React.Component {
             <BlogForm showNotification={this.showNotification} />
           </Togglable>
         </div>
-      );
+      )
     }
   }
 }

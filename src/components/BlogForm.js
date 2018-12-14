@@ -38,7 +38,7 @@ class BlogForm extends React.Component {
         <form onSubmit={this.newBlog}>
           <div>
             title
-          <input
+            <input
               type="text"
               name="title"
               value={this.state.title}
@@ -47,7 +47,7 @@ class BlogForm extends React.Component {
           </div>
           <div>
             author
-          <input
+            <input
               type="text"
               name="author"
               value={this.state.author}
@@ -56,7 +56,7 @@ class BlogForm extends React.Component {
           </div>
           <div>
             url
-          <input
+            <input
               type="text"
               name="url"
               value={this.state.url}

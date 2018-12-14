@@ -46,7 +46,7 @@ const getAll = () => {
 
 const setToken = (tokenValue) => {
   token = tokenValue
-
+  console.log('Set token', token)
 }
 
 export default { getAll, blogs, setToken }

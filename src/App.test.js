@@ -6,7 +6,6 @@ jest.mock('./services/blogs')
 import { loggedBlogUserKey } from './utils/constants'
 import blogService from './services/blogs'
 
-
 describe('<App />', () => {
   let app
 
@@ -26,9 +25,9 @@ describe('<App />', () => {
     })
   })
 
-  describe('user logged in', () => {
+  describe.only('user logged in', () => {
     beforeEach(() => {
-      localStorage.setItem(loggedBlogUserKey, JSON.stringify({
+      window.localStorage.setItem(loggedBlogUserKey, JSON.stringify({
         token: '4j432l423l312h',
         username: 'Paavo',
         name: 'Paavo Nieminen'
@@ -46,6 +45,4 @@ describe('<App />', () => {
       expect(loginFormWrapper.exists()).toBeFalsy()
     })
   })
-
-
 })
